@@ -1,0 +1,317 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #8E54E9, #4776E6);
+    color: #fff;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo-circle {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 28px;
+    backdrop-filter: blur(5px);
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.converter-card {
+    background: #fff;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+    color: #333;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.label {
+    display: block;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.input-control {
+    display: flex;
+    border-radius: 12px;
+    height: 60px;
+    align-items: center;
+    position: relative; /* Важно для позиционирования списка */
+}
+
+.from-container {
+    background-color: #D1F4E8; 
+    border: 1px solid #D1F4E8;
+}
+
+.to-container {
+    background-color: #E0E9F8;
+    border: 1px solid #E0E9F8;
+}
+
+input[type="number"] {
+    width: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 20px;
+    padding: 0 15px;
+    color: #333;
+    font-weight: 500;
+    text-align: right;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* --- СТИЛИ ДЛЯ КАСТОМНОГО СЕЛЕКТА --- */
+.custom-select-wrapper {
+    width: 140px;
+    height: 100%;
+    position: relative;
+    border-right: 1px solid rgba(0,0,0,0.05);
+}
+
+.select-trigger {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    gap: 5px;
+}
+
+.select-trigger i {
+    font-size: 12px;
+    color: #666;
+}
+
+/* Выпадающее меню */
+.custom-options {
+    position: absolute;
+    top: 105%; /* Чуть ниже поля */
+    left: 0;
+    width: 250px; /* Делаем шире, чтобы удобнее читать */
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    z-index: 100;
+    display: none; /* Скрыто по умолчанию */
+    padding: 10px;
+    overflow: hidden;
+}
+
+.custom-options.open {
+    display: block;
+    animation: fadeIn 0.2s;
+}
+
+/* Поле поиска внутри списка */
+.search-box {
+    margin-bottom: 10px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    text-align: left;
+    background: #f9f9f9;
+}
+
+.search-box input:focus {
+    border-color: #8E54E9;
+}
+
+/* Список опций */
+.options-list {
+    list-style: none;
+    max-height: 200px; /* Ограничение высоты */
+    overflow-y: auto; /* Скролл, если список длинный */
+}
+
+/* Стили скроллбара */
+.options-list::-webkit-scrollbar {
+    width: 5px;
+}
+.options-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 5px;
+}
+
+.option-item {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.1s;
+}
+
+.option-item:hover {
+    background: #f0f0f0;
+}
+
+/* ------------------------------------ */
+
+.swap-container {
+    position: relative;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: -10px 0 10px;
+    z-index: 10;
+}
+
+.swap-btn {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #DA44BB, #8721ff);
+    border-radius: 50%;
+    border: 5px solid #fff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    font-size: 18px;
+}
+
+.swap-btn:hover {
+    transform: rotate(180deg) scale(1.1);
+}
+
+.convert-btn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
+    border: none;
+    border-radius: 15px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s;
+    margin-top: 15px;
+    box-shadow: 0 5px 15px rgba(255, 106, 136, 0.4);
+}
+
+.convert-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 106, 136, 0.5);
+}
+
+.convert-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.status-card {
+    background: #F0F6FC;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 20px;
+    color: #333;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+.status-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    background-color: #4cd964;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #4cd964;
+}
+
+.status-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #666;
+}
+
+.status-value {
+    display: block;
+    color: #333;
+    font-weight: 600;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.footer-info {
+    margin-top: 20px;
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
