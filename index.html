@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Currency Exchange</title>
-    
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2250%22 fill=%22%234776E6%22/><text x=%2250%22 y=%2275%22 font-size=%2270%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22Arial,sans-serif%22 font-weight=%22bold%22>$</text></svg>">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 
     <div class="header">
         <div class="logo-circle">
-            <i class="fas fa-dollar-sign"></i>
+            <i class="fas fa-coins"></i>
         </div>
         <h1>Currency Exchange</h1>
         <p class="subtitle">Real-time currency conversion</p>
@@ -23,22 +20,22 @@
 
     <div class="converter-card">
         
-        <div class="input-group">
-            <label class="label">From</label>
+        <div class="input-group" id="group-one">
+            <label class="label">You Pay</label>
             <div class="input-control from-container">
                 
                 <div class="custom-select-wrapper" id="wrapper-one">
                     <div class="select-trigger" id="trigger-one">
-                        <span id="flag-one">🇺🇸</span> 
+                        <img src="" alt="flag" id="flag-one" class="flag-img">
                         <span id="code-one">USD</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="custom-options" id="options-one">
                         <div class="search-box">
-                            <input type="text" id="search-one" placeholder="Search currency...">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-one" placeholder="Search currency..." autocomplete="off">
                         </div>
-                        <ul class="options-list" id="list-one">
-                            </ul>
+                        <ul class="options-list" id="list-one"></ul>
                     </div>
                 </div>
 
@@ -47,60 +44,47 @@
         </div>
 
         <div class="swap-container">
-            <button class="swap-btn" id="swap">
+            <button class="swap-btn" id="swap" aria-label="Swap currencies">
                 <i class="fas fa-exchange-alt"></i>
             </button>
         </div>
 
-        <div class="input-group">
-            <label class="label">To</label>
+        <div class="input-group" id="group-two">
+            <label class="label">You Get</label>
             <div class="input-control to-container">
                 
                 <div class="custom-select-wrapper" id="wrapper-two">
                     <div class="select-trigger" id="trigger-two">
-                        <span id="flag-two">🇪🇺</span> 
+                        <img src="" alt="flag" id="flag-two" class="flag-img">
                         <span id="code-two">EUR</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="custom-options" id="options-two">
                         <div class="search-box">
-                            <input type="text" id="search-two" placeholder="Search currency...">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-two" placeholder="Search currency..." autocomplete="off">
                         </div>
-                        <ul class="options-list" id="list-two">
-                            </ul>
+                        <ul class="options-list" id="list-two"></ul>
                     </div>
                 </div>
 
-                <input type="number" id="amount-two" placeholder="0.00" readonly>
+                <input type="number" id="amount-two" placeholder="0.00">
             </div>
         </div>
 
         <button class="convert-btn" id="convert-btn">
-            <i class="fas fa-arrow-right"></i> Convert Currency
+            Refresh Rates <i class="fas fa-sync-alt"></i>
         </button>
     </div>
 
     <div class="status-card">
         <div class="status-header">
             <div class="dot"></div>
-            <span>Market Status</span>
+            <span>Live Exchange Rates</span>
         </div>
-        <div class="status-details">
-            <div>
-                Last Updated
-                <span class="status-value">Live</span>
-            </div>
-            <div>
-                Market
-                <span class="status-value">Open</span>
-            </div>
-        </div>
+        <div class="footer-info" id="rate-display">Loading...</div>
     </div>
 
-    <div class="footer-info">
-        <span id="rate-display">Press button to convert</span>
-    </div>
-
-    <script src="script.js"></script>
+    <script src="script.js?v=2"></script>
 </body>
 </html>
