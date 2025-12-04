@@ -1,25 +1,16 @@
 const BASE_URL = 'https://open.er-api.com/v6/latest/';
 
-// 1. ПОЛНЫЙ СЛОВАРЬ НАЗВАНИЙ (ВКЛЮЧАЯ РЕДКИЕ И КРИПТУ)
+// 1. СЛОВАРЬ ВАЛЮТ
 const currencyNames = {
-    // Основные
     'USD': 'United States Dollar', 'EUR': 'Euro', 'RUB': 'Russian Ruble',
     'GBP': 'British Pound', 'JPY': 'Japanese Yen', 'CNY': 'Chinese Yuan',
     'KZT': 'Kazakhstani Tenge', 'KGS': 'Kyrgyzstani Som', 'UAH': 'Ukrainian Hryvnia',
     'BYN': 'Belarusian Ruble', 'TRY': 'Turkish Lira', 'KRW': 'South Korean Won',
-    
-    // Те, что были на скринах
-    'CDF': 'Congolese Franc',
-    'CLF': 'Chilean Unit of Account (UF)',
-    'CNH': 'Chinese Yuan (Offshore)',
-    'WST': 'Samoan Tala',
-    'XAF': 'Central African CFA Franc',
-    'XCD': 'East Caribbean Dollar',
-    'XOF': 'West African CFA Franc',
-    'XPF': 'CFP Franc',
-    'XDR': 'Special Drawing Rights', // МВФ
-    
-    // Остальной мир
+    'CDF': 'Congolese Franc', 'CLF': 'Chilean Unit of Account (UF)',
+    'CNH': 'Chinese Yuan (Offshore)', 'WST': 'Samoan Tala',
+    'XAF': 'Central African CFA Franc', 'XCD': 'East Caribbean Dollar',
+    'XOF': 'West African CFA Franc', 'XPF': 'CFP Franc',
+    'XDR': 'Special Drawing Rights',
     'AED': 'UAE Dirham', 'AFN': 'Afghan Afghani', 'ALL': 'Albanian Lek',
     'AMD': 'Armenian Dram', 'ANG': 'Neth. Antillean Guilder', 'AOA': 'Angolan Kwanza',
     'ARS': 'Argentine Peso', 'AUD': 'Australian Dollar', 'AWG': 'Aruban Florin',
@@ -66,40 +57,35 @@ const currencyNames = {
     'TTD': 'Trinidad & Tobago Dollar', 'TWD': 'New Taiwan Dollar', 'TZS': 'Tanzanian Shilling',
     'UGX': 'Ugandan Shilling', 'UYU': 'Uruguayan Peso', 'UZS': 'Uzbekistani Som',
     'VES': 'Venezuelan Bolívar', 'VND': 'Vietnamese Dong', 'VUV': 'Vanuatu Vatu',
-    'WST': 'Samoan Tala', 'XAG': 'Silver (troy ounce)', 'XAU': 'Gold (troy ounce)',
+    'XAG': 'Silver (troy ounce)', 'XAU': 'Gold (troy ounce)',
     'YER': 'Yemeni Rial', 'ZAR': 'South African Rand', 'ZMW': 'Zambian Kwacha',
     'ZWL': 'Zimbabwean Dollar'
 };
 
-// 2. ИСПРАВЛЕНИЕ ФЛАГОВ (Карта спец. символов)
+// 2. ИСПРАВЛЕНИЕ ФЛАГОВ
 const customFlagMap = {
-    'EUR': 'https://flagcdn.com/w40/eu.png', // Евросоюз
+    'EUR': 'https://flagcdn.com/w40/eu.png',
     'USD': 'https://flagcdn.com/w40/us.png',
     'GBP': 'https://flagcdn.com/w40/gb.png',
-    'CNH': 'https://flagcdn.com/w40/cn.png', // Офшорный юань -> Китай
-    
-    // Африканские и Карибские союзы (нет своих флагов в ISO, берем представителя или глобус)
-    'XAF': 'https://flagcdn.com/w40/cm.png', // Центральная Африка -> используем Камерун
-    'XOF': 'https://flagcdn.com/w40/sn.png', // Западная Африка -> Сенегал
-    'XCD': 'https://flagcdn.com/w40/ag.png', // Карибы -> Антигуа
-    'ANG': 'https://flagcdn.com/w40/cw.png', // Кюрасао
-    'WST': 'https://flagcdn.com/w40/ws.png', // Самоа
-    
-    // Крипта и металлы (иконка монетки/глобуса)
+    'CNH': 'https://flagcdn.com/w40/cn.png',
+    'INR': 'https://flagcdn.com/w40/in.png',
+    'XAF': 'https://flagcdn.com/w40/cm.png',
+    'XOF': 'https://flagcdn.com/w40/sn.png',
+    'XCD': 'https://flagcdn.com/w40/ag.png',
+    'ANG': 'https://flagcdn.com/w40/cw.png',
+    'WST': 'https://flagcdn.com/w40/ws.png',
     'BTC': 'https://cdn-icons-png.flaticon.com/512/5968/5968260.png',
     'ETH': 'https://cdn-icons-png.flaticon.com/512/6001/6001368.png',
-    'XAU': 'https://cdn-icons-png.flaticon.com/512/261/261374.png', // Золото
-    'XAG': 'https://cdn-icons-png.flaticon.com/512/261/261374.png', // Серебро
+    'XAU': 'https://cdn-icons-png.flaticon.com/512/261/261374.png',
+    'XAG': 'https://cdn-icons-png.flaticon.com/512/261/261374.png',
 };
 
-// Заглушка (Глобус), если совсем ничего не нашлось
 const GENERIC_FLAG = 'https://cdn-icons-png.flaticon.com/512/921/921490.png';
 
 let state = {
     one: 'USD',
-    two: 'EUR',
+    two: 'INR',
     rates: {},
-    lastUpdated: null
 };
 
 let currencyList = [];
@@ -110,6 +96,7 @@ const els = {
     swapBtn: document.getElementById('swap'),
     convertBtn: document.getElementById('convert-btn'),
     rateDisplay: document.getElementById('rate-display'),
+    lastUpdated: document.getElementById('last-updated'), // Ссылка на новый элемент
     wrappers: { one: document.getElementById('wrapper-one'), two: document.getElementById('wrapper-two') },
     flags: { one: document.getElementById('flag-one'), two: document.getElementById('flag-two') },
     codes: { one: document.getElementById('code-one'), two: document.getElementById('code-two') }
@@ -117,28 +104,31 @@ const els = {
 
 // --- ФУНКЦИИ ---
 
-function getFlagUrl(code) {
-    // 1. Сначала проверяем ручной список (для сложных случаев типа XAF, EUR, CNH)
-    if (customFlagMap[code]) {
-        return customFlagMap[code];
-    }
+// Функция для получения текущей даты и времени в формате DD.MM.YYYY HH:MM
+function getCurrentDateTime() {
+    const now = new Date();
+    const pad = (num) => num.toString().padStart(2, '0');
     
-    // 2. Если валюта начинается на X (и ее нет в ручном списке), скорее всего это тех. код или металл
-    // Возвращаем заглушку сразу, чтобы не плодить битые картинки
-    if (code.startsWith('X') && code !== 'XOF' && code !== 'XAF' && code !== 'XCD') {
-        return GENERIC_FLAG;
-    }
+    const day = pad(now.getDate());
+    const month = pad(now.getMonth() + 1); // Месяцы начинаются с 0
+    const year = now.getFullYear();
+    const hours = pad(now.getHours());
+    const minutes = pad(now.getMinutes());
 
-    // 3. Стандартная логика: берем первые 2 буквы как код страны
+    return `${day}.${month}.${year} ${hours}:${minutes}`;
+}
+
+function getFlagUrl(code) {
+    if (customFlagMap[code]) return customFlagMap[code];
+    if (code.startsWith('X')) return GENERIC_FLAG;
     const countryCode = code.slice(0, 2).toLowerCase();
     return `https://flagcdn.com/w40/${countryCode}.png`;
 }
 
 function getCurrencyName(code) {
-    return currencyNames[code] || code; // Если названия нет, просто код
+    return currencyNames[code] || code;
 }
 
-// Обработчик ошибки загрузки (последний рубеж)
 function handleImageError(img) {
     if (img.src !== GENERIC_FLAG) {
         img.src = GENERIC_FLAG;
@@ -148,19 +138,15 @@ function handleImageError(img) {
 
 async function fetchRates(baseCurrency) {
     try {
-        els.convertBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Loading...';
+        els.rateDisplay.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Loading...';
+        els.lastUpdated.innerText = ''; // Очищаем время при загрузке
+
         const res = await fetch(`${BASE_URL}${baseCurrency}`);
         const data = await res.json();
         
         if (data.result === "success") {
             state.rates = data.rates;
-            
-            // Сортировка
-            const allCodes = Object.keys(data.rates);
-            const popular = allCodes.filter(code => currencyNames[code]); // Те, что знаем
-            const others = allCodes.filter(code => !currencyNames[code]); // Неизвестные
-            
-            currencyList = [...popular, ...others];
+            currencyList = Object.keys(data.rates).sort();
             
             if (document.getElementById('list-one').children.length === 0) {
                 initSelects();
@@ -171,9 +157,8 @@ async function fetchRates(baseCurrency) {
         }
     } catch (err) {
         console.error(err);
-        els.rateDisplay.innerText = "Error connecting to API";
-    } finally {
-        els.convertBtn.innerHTML = 'Refresh Rates <i class="fas fa-sync-alt"></i>';
+        els.rateDisplay.innerText = "Error connecting";
+        els.lastUpdated.innerText = "";
     }
 }
 
@@ -183,11 +168,12 @@ function recalculate(source) {
 
     if (source === 'one') {
         const val = parseFloat(els.amountOne.value);
-        els.amountTwo.value = isNaN(val) ? '' : (val * rate).toFixed(2);
+        els.amountTwo.value = isNaN(val) ? '' : (val * rate).toFixed(3);
     } else {
         const val = parseFloat(els.amountTwo.value);
-        els.amountOne.value = isNaN(val) ? '' : (val / rate).toFixed(2);
+        els.amountOne.value = isNaN(val) ? '' : (val / rate).toFixed(3);
     }
+    updateRateDisplay();
 }
 
 function updateUI() {
@@ -203,10 +189,15 @@ function updateUI() {
     updateRateDisplay();
 }
 
+// Обновление текста результата и времени
 function updateRateDisplay() {
     const rate = state.rates[state.two];
     if (rate) {
-        els.rateDisplay.innerText = `1 ${state.one} = ${rate.toFixed(4)} ${state.two}`;
+        els.rateDisplay.innerText = `1 ${state.one} = ${rate.toFixed(3)} ${state.two}`;
+        // Устанавливаем текущее время
+        els.lastUpdated.innerText = getCurrentDateTime();
+    } else {
+        els.lastUpdated.innerText = "";
     }
 }
 
@@ -218,9 +209,8 @@ function initSelects() {
 function setupSelect(id) {
     const list = document.getElementById(`list-${id}`);
     const search = document.getElementById(`search-${id}`);
-    const wrapper = els.wrappers[id];
-    const trigger = document.getElementById(`trigger-${id}`);
     const options = document.getElementById(`options-${id}`);
+    const trigger = document.getElementById(`trigger-${id}`);
 
     function renderList(filter = '') {
         list.innerHTML = '';
@@ -236,7 +226,6 @@ function setupSelect(id) {
             return;
         }
         
-        // Оптимизация: рендерим только первые 100 элементов, если фильтра нет (чтобы не лагало)
         const itemsToShow = filter ? filtered : filtered.slice(0, 100);
         
         itemsToShow.forEach(code => {
@@ -250,7 +239,7 @@ function setupSelect(id) {
                          style="width:24px; height:16px; object-fit:cover; border-radius:2px;"
                          onerror="this.onerror=null; this.src='${GENERIC_FLAG}'; this.style.opacity='0.5';">
                     <div style="display:flex; flex-direction:column; line-height:1.2;">
-                        <span style="font-weight:600;">${code}</span>
+                        <span style="font-weight:600; font-size:14px;">${code}</span>
                         <small style="font-size:11px; color:#888;">${getCurrencyName(code)}</small>
                     </div>
                 </div>
@@ -270,7 +259,6 @@ function setupSelect(id) {
         closeAll();
         if (!isOpen) {
             options.classList.add('open');
-            wrapper.classList.add('active');
             renderList(); 
             search.value = '';
             search.focus();
@@ -291,7 +279,6 @@ function selectCurrency(id, code) {
 
 function closeAll() {
     document.querySelectorAll('.custom-options').forEach(el => el.classList.remove('open'));
-    document.querySelectorAll('.custom-select-wrapper').forEach(el => el.classList.remove('active'));
 }
 
 window.addEventListener('click', closeAll);
@@ -309,7 +296,9 @@ els.swapBtn.addEventListener('click', () => {
     fetchRates(state.one);
 });
 
-els.convertBtn.addEventListener('click', () => fetchRates(state.one));
+if(els.convertBtn) {
+    els.convertBtn.addEventListener('click', () => fetchRates(state.one));
+}
 
 updateUI();
 fetchRates(state.one);
